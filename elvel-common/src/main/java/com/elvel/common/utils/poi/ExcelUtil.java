@@ -74,7 +74,7 @@ import com.elvel.common.annotation.Excel;
 import com.elvel.common.annotation.Excel.ColumnType;
 import com.elvel.common.annotation.Excel.Type;
 import com.elvel.common.annotation.Excels;
-import com.elvel.common.config.RuoYiConfig;
+import com.elvel.common.config.ElvelConfig;
 import com.elvel.common.core.domain.AjaxResult;
 import com.elvel.common.core.text.Convert;
 import com.elvel.common.exception.UtilException;
@@ -1480,7 +1480,7 @@ public class ExcelUtil<T>
      */
     public String getAbsoluteFile(String filename)
     {
-        String downloadPath = RuoYiConfig.getDownloadPath() + filename;
+        String downloadPath = ElvelConfig.getDownloadPath() + filename;
         File desc = new File(downloadPath);
         if (!desc.getParentFile().exists())
         {
