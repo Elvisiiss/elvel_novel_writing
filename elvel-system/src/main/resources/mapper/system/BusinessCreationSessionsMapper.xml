@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elvel.system.mapper.BusinessCreationSessionsMapper">
+
+    <resultMap type="BusinessCreationSessions" id="BusinessCreationSessionsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="bookId"    column="book_id"    />
+        <result property="chapterId"    column="chapter_id"    />
+        <result property="currentGenerationId"    column="current_generation_id"    />
+        <result property="pendingDecisionPointId"    column="pending_decision_point_id"    />
+        <result property="sessionData"    column="session_data"    />
+        <result property="isActive"    column="is_active"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastActivityAt"    column="last_activity_at"    />
+    </resultMap>
+
+    <sql id="selectBusinessCreationSessionsVo">
+        select id, user_id, book_id, chapter_id, current_generation_id, pending_decision_point_id, session_data, is_active, create_time, last_activity_at from business_creation_sessions
+    </sql>
+
+    <select id="selectBusinessCreationSessionsList" parameterType="BusinessCreationSessions" resultMap="BusinessCreationSessionsResult">
+        <include refid="selectBusinessCreationSessionsVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="bookId != null "> and book_id = #{bookId}</if>
+            <if test="chapterId != null "> and chapter_id = #{chapterId}</if>
+            <if test="currentGenerationId != null "> and current_generation_id = #{currentGenerationId}</if>
+            <if test="pendingDecisionPointId != null "> and pending_decision_point_id = #{pendingDecisionPointId}</if>
+            <if test="sessionData != null  and sessionData != ''"> and session_data = #{sessionData}</if>
+            <if test="isActive != null "> and is_active = #{isActive}</if>
+            <if test="lastActivityAt != null "> and last_activity_at = #{lastActivityAt}</if>
+        </where>
+    </select>
+
+    <select id="selectBusinessCreationSessionsById" parameterType="Long" resultMap="BusinessCreationSessionsResult">
+        <include refid="selectBusinessCreationSessionsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBusinessCreationSessions" parameterType="BusinessCreationSessions" useGeneratedKeys="true" keyProperty="id">
+        insert into business_creation_sessions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="bookId != null">book_id,</if>
+            <if test="chapterId != null">chapter_id,</if>
+            <if test="currentGenerationId != null">current_generation_id,</if>
+            <if test="pendingDecisionPointId != null">pending_decision_point_id,</if>
+            <if test="sessionData != null">session_data,</if>
+            <if test="isActive != null">is_active,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="lastActivityAt != null">last_activity_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="bookId != null">#{bookId},</if>
+            <if test="chapterId != null">#{chapterId},</if>
+            <if test="currentGenerationId != null">#{currentGenerationId},</if>
+            <if test="pendingDecisionPointId != null">#{pendingDecisionPointId},</if>
+            <if test="sessionData != null">#{sessionData},</if>
+            <if test="isActive != null">#{isActive},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="lastActivityAt != null">#{lastActivityAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusinessCreationSessions" parameterType="BusinessCreationSessions">
+        update business_creation_sessions
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="bookId != null">book_id = #{bookId},</if>
+            <if test="chapterId != null">chapter_id = #{chapterId},</if>
+            <if test="currentGenerationId != null">current_generation_id = #{currentGenerationId},</if>
+            <if test="pendingDecisionPointId != null">pending_decision_point_id = #{pendingDecisionPointId},</if>
+            <if test="sessionData != null">session_data = #{sessionData},</if>
+            <if test="isActive != null">is_active = #{isActive},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="lastActivityAt != null">last_activity_at = #{lastActivityAt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusinessCreationSessionsById" parameterType="Long">
+        delete from business_creation_sessions where id = #{id}
+    </delete>
+
+    <delete id="deleteBusinessCreationSessionsByIds" parameterType="String">
+        delete from business_creation_sessions where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

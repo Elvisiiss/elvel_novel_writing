@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elvel.system.mapper.BusinessContentGenerationsMapper">
+
+    <resultMap type="BusinessContentGenerations" id="BusinessContentGenerationsResult">
+        <result property="id"    column="id"    />
+        <result property="chapterId"    column="chapter_id"    />
+        <result property="generationIndex"    column="generation_index"    />
+        <result property="content"    column="content"    />
+        <result property="prompt"    column="prompt"    />
+        <result property="decisionPointId"    column="decision_point_id"    />
+        <result property="aiModel"    column="ai_model"    />
+        <result property="tokenCount"    column="token_count"    />
+        <result property="isRewritten"    column="is_rewritten"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectBusinessContentGenerationsVo">
+        select id, chapter_id, generation_index, content, prompt, decision_point_id, ai_model, token_count, is_rewritten, create_time from business_content_generations
+    </sql>
+
+    <select id="selectBusinessContentGenerationsList" parameterType="BusinessContentGenerations" resultMap="BusinessContentGenerationsResult">
+        <include refid="selectBusinessContentGenerationsVo"/>
+        <where>
+            <if test="chapterId != null "> and chapter_id = #{chapterId}</if>
+            <if test="generationIndex != null "> and generation_index = #{generationIndex}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="prompt != null  and prompt != ''"> and prompt = #{prompt}</if>
+            <if test="decisionPointId != null "> and decision_point_id = #{decisionPointId}</if>
+            <if test="aiModel != null  and aiModel != ''"> and ai_model = #{aiModel}</if>
+            <if test="tokenCount != null "> and token_count = #{tokenCount}</if>
+            <if test="isRewritten != null "> and is_rewritten = #{isRewritten}</if>
+        </where>
+    </select>
+
+    <select id="selectBusinessContentGenerationsById" parameterType="Long" resultMap="BusinessContentGenerationsResult">
+        <include refid="selectBusinessContentGenerationsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBusinessContentGenerations" parameterType="BusinessContentGenerations" useGeneratedKeys="true" keyProperty="id">
+        insert into business_content_generations
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="chapterId != null">chapter_id,</if>
+            <if test="generationIndex != null">generation_index,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="prompt != null">prompt,</if>
+            <if test="decisionPointId != null">decision_point_id,</if>
+            <if test="aiModel != null">ai_model,</if>
+            <if test="tokenCount != null">token_count,</if>
+            <if test="isRewritten != null">is_rewritten,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="chapterId != null">#{chapterId},</if>
+            <if test="generationIndex != null">#{generationIndex},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="prompt != null">#{prompt},</if>
+            <if test="decisionPointId != null">#{decisionPointId},</if>
+            <if test="aiModel != null">#{aiModel},</if>
+            <if test="tokenCount != null">#{tokenCount},</if>
+            <if test="isRewritten != null">#{isRewritten},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusinessContentGenerations" parameterType="BusinessContentGenerations">
+        update business_content_generations
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chapterId != null">chapter_id = #{chapterId},</if>
+            <if test="generationIndex != null">generation_index = #{generationIndex},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="prompt != null">prompt = #{prompt},</if>
+            <if test="decisionPointId != null">decision_point_id = #{decisionPointId},</if>
+            <if test="aiModel != null">ai_model = #{aiModel},</if>
+            <if test="tokenCount != null">token_count = #{tokenCount},</if>
+            <if test="isRewritten != null">is_rewritten = #{isRewritten},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusinessContentGenerationsById" parameterType="Long">
+        delete from business_content_generations where id = #{id}
+    </delete>
+
+    <delete id="deleteBusinessContentGenerationsByIds" parameterType="String">
+        delete from business_content_generations where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

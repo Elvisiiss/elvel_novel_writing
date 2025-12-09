@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elvel.system.mapper.BusinessCommentsMapper">
+
+    <resultMap type="BusinessComments" id="BusinessCommentsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="bookId"    column="book_id"    />
+        <result property="targetType"    column="target_type"    />
+        <result property="targetId"    column="target_id"    />
+        <result property="content"    column="content"    />
+        <result property="parentCommentId"    column="parent_comment_id"    />
+        <result property="likeCount"    column="like_count"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectBusinessCommentsVo">
+        select id, user_id, book_id, target_type, target_id, content, parent_comment_id, like_count, create_time from business_comments
+    </sql>
+
+    <select id="selectBusinessCommentsList" parameterType="BusinessComments" resultMap="BusinessCommentsResult">
+        <include refid="selectBusinessCommentsVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="bookId != null "> and book_id = #{bookId}</if>
+            <if test="targetType != null  and targetType != ''"> and target_type = #{targetType}</if>
+            <if test="targetId != null "> and target_id = #{targetId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="parentCommentId != null "> and parent_comment_id = #{parentCommentId}</if>
+            <if test="likeCount != null "> and like_count = #{likeCount}</if>
+        </where>
+    </select>
+
+    <select id="selectBusinessCommentsById" parameterType="Long" resultMap="BusinessCommentsResult">
+        <include refid="selectBusinessCommentsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBusinessComments" parameterType="BusinessComments" useGeneratedKeys="true" keyProperty="id">
+        insert into business_comments
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="bookId != null">book_id,</if>
+            <if test="targetType != null">target_type,</if>
+            <if test="targetId != null">target_id,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="parentCommentId != null">parent_comment_id,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="bookId != null">#{bookId},</if>
+            <if test="targetType != null">#{targetType},</if>
+            <if test="targetId != null">#{targetId},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="parentCommentId != null">#{parentCommentId},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusinessComments" parameterType="BusinessComments">
+        update business_comments
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="bookId != null">book_id = #{bookId},</if>
+            <if test="targetType != null">target_type = #{targetType},</if>
+            <if test="targetId != null">target_id = #{targetId},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="parentCommentId != null">parent_comment_id = #{parentCommentId},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusinessCommentsById" parameterType="Long">
+        delete from business_comments where id = #{id}
+    </delete>
+
+    <delete id="deleteBusinessCommentsByIds" parameterType="String">
+        delete from business_comments where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

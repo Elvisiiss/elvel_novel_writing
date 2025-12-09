@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elvel.system.mapper.BusinessBookOutlinesMapper">
+
+    <resultMap type="BusinessBookOutlines" id="BusinessBookOutlinesResult">
+        <result property="id"    column="id"    />
+        <result property="bookId"    column="book_id"    />
+        <result property="outlineText"    column="outline_text"    />
+        <result property="structure"    column="structure"    />
+        <result property="version"    column="version"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectBusinessBookOutlinesVo">
+        select id, book_id, outline_text, structure, version, create_time from business_book_outlines
+    </sql>
+
+    <select id="selectBusinessBookOutlinesList" parameterType="BusinessBookOutlines" resultMap="BusinessBookOutlinesResult">
+        <include refid="selectBusinessBookOutlinesVo"/>
+        <where>
+            <if test="bookId != null "> and book_id = #{bookId}</if>
+            <if test="outlineText != null  and outlineText != ''"> and outline_text = #{outlineText}</if>
+            <if test="structure != null  and structure != ''"> and structure = #{structure}</if>
+            <if test="version != null "> and version = #{version}</if>
+        </where>
+    </select>
+
+    <select id="selectBusinessBookOutlinesById" parameterType="Long" resultMap="BusinessBookOutlinesResult">
+        <include refid="selectBusinessBookOutlinesVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBusinessBookOutlines" parameterType="BusinessBookOutlines" useGeneratedKeys="true" keyProperty="id">
+        insert into business_book_outlines
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bookId != null">book_id,</if>
+            <if test="outlineText != null and outlineText != ''">outline_text,</if>
+            <if test="structure != null">structure,</if>
+            <if test="version != null">version,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bookId != null">#{bookId},</if>
+            <if test="outlineText != null and outlineText != ''">#{outlineText},</if>
+            <if test="structure != null">#{structure},</if>
+            <if test="version != null">#{version},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusinessBookOutlines" parameterType="BusinessBookOutlines">
+        update business_book_outlines
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bookId != null">book_id = #{bookId},</if>
+            <if test="outlineText != null and outlineText != ''">outline_text = #{outlineText},</if>
+            <if test="structure != null">structure = #{structure},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusinessBookOutlinesById" parameterType="Long">
+        delete from business_book_outlines where id = #{id}
+    </delete>
+
+    <delete id="deleteBusinessBookOutlinesByIds" parameterType="String">
+        delete from business_book_outlines where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

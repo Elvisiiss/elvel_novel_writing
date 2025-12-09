@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elvel.system.mapper.BusinessCharactersMapper">
+
+    <resultMap type="BusinessCharacters" id="BusinessCharactersResult">
+        <result property="id"    column="id"    />
+        <result property="bookId"    column="book_id"    />
+        <result property="name"    column="name"    />
+        <result property="description"    column="description"    />
+        <result property="traits"    column="traits"    />
+        <result property="appearance"    column="appearance"    />
+        <result property="importance"    column="importance"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBusinessCharactersVo">
+        select id, book_id, name, description, traits, appearance, importance, create_time, update_time from business_characters
+    </sql>
+
+    <select id="selectBusinessCharactersList" parameterType="BusinessCharacters" resultMap="BusinessCharactersResult">
+        <include refid="selectBusinessCharactersVo"/>
+        <where>
+            <if test="bookId != null "> and book_id = #{bookId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="traits != null  and traits != ''"> and traits = #{traits}</if>
+            <if test="appearance != null  and appearance != ''"> and appearance = #{appearance}</if>
+            <if test="importance != null  and importance != ''"> and importance = #{importance}</if>
+        </where>
+    </select>
+
+    <select id="selectBusinessCharactersById" parameterType="Long" resultMap="BusinessCharactersResult">
+        <include refid="selectBusinessCharactersVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBusinessCharacters" parameterType="BusinessCharacters" useGeneratedKeys="true" keyProperty="id">
+        insert into business_characters
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bookId != null">book_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="description != null">description,</if>
+            <if test="traits != null">traits,</if>
+            <if test="appearance != null">appearance,</if>
+            <if test="importance != null">importance,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bookId != null">#{bookId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="description != null">#{description},</if>
+            <if test="traits != null">#{traits},</if>
+            <if test="appearance != null">#{appearance},</if>
+            <if test="importance != null">#{importance},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusinessCharacters" parameterType="BusinessCharacters">
+        update business_characters
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bookId != null">book_id = #{bookId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="traits != null">traits = #{traits},</if>
+            <if test="appearance != null">appearance = #{appearance},</if>
+            <if test="importance != null">importance = #{importance},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusinessCharactersById" parameterType="Long">
+        delete from business_characters where id = #{id}
+    </delete>
+
+    <delete id="deleteBusinessCharactersByIds" parameterType="String">
+        delete from business_characters where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

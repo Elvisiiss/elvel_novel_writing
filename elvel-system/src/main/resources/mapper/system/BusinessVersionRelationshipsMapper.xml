@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elvel.system.mapper.BusinessVersionRelationshipsMapper">
+
+    <resultMap type="BusinessVersionRelationships" id="BusinessVersionRelationshipsResult">
+        <result property="id"    column="id"    />
+        <result property="originalBookId"    column="original_book_id"    />
+        <result property="derivativeBookId"    column="derivative_book_id"    />
+        <result property="forkFromChapterId"    column="fork_from_chapter_id"    />
+        <result property="forkFromGenerationId"    column="fork_from_generation_id"    />
+        <result property="relationshipType"    column="relationship_type"    />
+        <result property="permissionGranted"    column="permission_granted"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectBusinessVersionRelationshipsVo">
+        select id, original_book_id, derivative_book_id, fork_from_chapter_id, fork_from_generation_id, relationship_type, permission_granted, create_time from business_version_relationships
+    </sql>
+
+    <select id="selectBusinessVersionRelationshipsList" parameterType="BusinessVersionRelationships" resultMap="BusinessVersionRelationshipsResult">
+        <include refid="selectBusinessVersionRelationshipsVo"/>
+        <where>
+            <if test="originalBookId != null "> and original_book_id = #{originalBookId}</if>
+            <if test="derivativeBookId != null "> and derivative_book_id = #{derivativeBookId}</if>
+            <if test="forkFromChapterId != null "> and fork_from_chapter_id = #{forkFromChapterId}</if>
+            <if test="forkFromGenerationId != null "> and fork_from_generation_id = #{forkFromGenerationId}</if>
+            <if test="relationshipType != null  and relationshipType != ''"> and relationship_type = #{relationshipType}</if>
+            <if test="permissionGranted != null "> and permission_granted = #{permissionGranted}</if>
+        </where>
+    </select>
+
+    <select id="selectBusinessVersionRelationshipsById" parameterType="Long" resultMap="BusinessVersionRelationshipsResult">
+        <include refid="selectBusinessVersionRelationshipsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBusinessVersionRelationships" parameterType="BusinessVersionRelationships" useGeneratedKeys="true" keyProperty="id">
+        insert into business_version_relationships
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="originalBookId != null">original_book_id,</if>
+            <if test="derivativeBookId != null">derivative_book_id,</if>
+            <if test="forkFromChapterId != null">fork_from_chapter_id,</if>
+            <if test="forkFromGenerationId != null">fork_from_generation_id,</if>
+            <if test="relationshipType != null">relationship_type,</if>
+            <if test="permissionGranted != null">permission_granted,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="originalBookId != null">#{originalBookId},</if>
+            <if test="derivativeBookId != null">#{derivativeBookId},</if>
+            <if test="forkFromChapterId != null">#{forkFromChapterId},</if>
+            <if test="forkFromGenerationId != null">#{forkFromGenerationId},</if>
+            <if test="relationshipType != null">#{relationshipType},</if>
+            <if test="permissionGranted != null">#{permissionGranted},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusinessVersionRelationships" parameterType="BusinessVersionRelationships">
+        update business_version_relationships
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="originalBookId != null">original_book_id = #{originalBookId},</if>
+            <if test="derivativeBookId != null">derivative_book_id = #{derivativeBookId},</if>
+            <if test="forkFromChapterId != null">fork_from_chapter_id = #{forkFromChapterId},</if>
+            <if test="forkFromGenerationId != null">fork_from_generation_id = #{forkFromGenerationId},</if>
+            <if test="relationshipType != null">relationship_type = #{relationshipType},</if>
+            <if test="permissionGranted != null">permission_granted = #{permissionGranted},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusinessVersionRelationshipsById" parameterType="Long">
+        delete from business_version_relationships where id = #{id}
+    </delete>
+
+    <delete id="deleteBusinessVersionRelationshipsByIds" parameterType="String">
+        delete from business_version_relationships where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

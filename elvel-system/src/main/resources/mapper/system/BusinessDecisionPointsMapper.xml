@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elvel.system.mapper.BusinessDecisionPointsMapper">
+
+    <resultMap type="BusinessDecisionPoints" id="BusinessDecisionPointsResult">
+        <result property="id"    column="id"    />
+        <result property="chapterId"    column="chapter_id"    />
+        <result property="generationId"    column="generation_id"    />
+        <result property="position"    column="position"    />
+        <result property="question"    column="question"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectBusinessDecisionPointsVo">
+        select id, chapter_id, generation_id, position, question, create_time from business_decision_points
+    </sql>
+
+    <select id="selectBusinessDecisionPointsList" parameterType="BusinessDecisionPoints" resultMap="BusinessDecisionPointsResult">
+        <include refid="selectBusinessDecisionPointsVo"/>
+        <where>
+            <if test="chapterId != null "> and chapter_id = #{chapterId}</if>
+            <if test="generationId != null "> and generation_id = #{generationId}</if>
+            <if test="position != null "> and position = #{position}</if>
+            <if test="question != null  and question != ''"> and question = #{question}</if>
+        </where>
+    </select>
+
+    <select id="selectBusinessDecisionPointsById" parameterType="Long" resultMap="BusinessDecisionPointsResult">
+        <include refid="selectBusinessDecisionPointsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBusinessDecisionPoints" parameterType="BusinessDecisionPoints" useGeneratedKeys="true" keyProperty="id">
+        insert into business_decision_points
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="chapterId != null">chapter_id,</if>
+            <if test="generationId != null">generation_id,</if>
+            <if test="position != null">position,</if>
+            <if test="question != null">question,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="chapterId != null">#{chapterId},</if>
+            <if test="generationId != null">#{generationId},</if>
+            <if test="position != null">#{position},</if>
+            <if test="question != null">#{question},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusinessDecisionPoints" parameterType="BusinessDecisionPoints">
+        update business_decision_points
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chapterId != null">chapter_id = #{chapterId},</if>
+            <if test="generationId != null">generation_id = #{generationId},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="question != null">question = #{question},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusinessDecisionPointsById" parameterType="Long">
+        delete from business_decision_points where id = #{id}
+    </delete>
+
+    <delete id="deleteBusinessDecisionPointsByIds" parameterType="String">
+        delete from business_decision_points where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

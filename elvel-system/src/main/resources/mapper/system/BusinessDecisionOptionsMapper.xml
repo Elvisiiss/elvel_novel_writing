@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.elvel.system.mapper.BusinessDecisionOptionsMapper">
+
+    <resultMap type="BusinessDecisionOptions" id="BusinessDecisionOptionsResult">
+        <result property="id"    column="id"    />
+        <result property="decisionPointId"    column="decision_point_id"    />
+        <result property="optionText"    column="option_text"    />
+        <result property="isSystemProvided"    column="is_system_provided"    />
+        <result property="keywords"    column="keywords"    />
+        <result property="selectedCount"    column="selected_count"    />
+        <result property="isSelected"    column="is_selected"    />
+        <result property="nextGenerationId"    column="next_generation_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectBusinessDecisionOptionsVo">
+        select id, decision_point_id, option_text, is_system_provided, keywords, selected_count, is_selected, next_generation_id, create_time from business_decision_options
+    </sql>
+
+    <select id="selectBusinessDecisionOptionsList" parameterType="BusinessDecisionOptions" resultMap="BusinessDecisionOptionsResult">
+        <include refid="selectBusinessDecisionOptionsVo"/>
+        <where>
+            <if test="decisionPointId != null "> and decision_point_id = #{decisionPointId}</if>
+            <if test="optionText != null  and optionText != ''"> and option_text = #{optionText}</if>
+            <if test="isSystemProvided != null "> and is_system_provided = #{isSystemProvided}</if>
+            <if test="keywords != null  and keywords != ''"> and keywords = #{keywords}</if>
+            <if test="selectedCount != null "> and selected_count = #{selectedCount}</if>
+            <if test="isSelected != null "> and is_selected = #{isSelected}</if>
+            <if test="nextGenerationId != null "> and next_generation_id = #{nextGenerationId}</if>
+        </where>
+    </select>
+
+    <select id="selectBusinessDecisionOptionsById" parameterType="Long" resultMap="BusinessDecisionOptionsResult">
+        <include refid="selectBusinessDecisionOptionsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBusinessDecisionOptions" parameterType="BusinessDecisionOptions" useGeneratedKeys="true" keyProperty="id">
+        insert into business_decision_options
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="decisionPointId != null">decision_point_id,</if>
+            <if test="optionText != null and optionText != ''">option_text,</if>
+            <if test="isSystemProvided != null">is_system_provided,</if>
+            <if test="keywords != null">keywords,</if>
+            <if test="selectedCount != null">selected_count,</if>
+            <if test="isSelected != null">is_selected,</if>
+            <if test="nextGenerationId != null">next_generation_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="decisionPointId != null">#{decisionPointId},</if>
+            <if test="optionText != null and optionText != ''">#{optionText},</if>
+            <if test="isSystemProvided != null">#{isSystemProvided},</if>
+            <if test="keywords != null">#{keywords},</if>
+            <if test="selectedCount != null">#{selectedCount},</if>
+            <if test="isSelected != null">#{isSelected},</if>
+            <if test="nextGenerationId != null">#{nextGenerationId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusinessDecisionOptions" parameterType="BusinessDecisionOptions">
+        update business_decision_options
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="decisionPointId != null">decision_point_id = #{decisionPointId},</if>
+            <if test="optionText != null and optionText != ''">option_text = #{optionText},</if>
+            <if test="isSystemProvided != null">is_system_provided = #{isSystemProvided},</if>
+            <if test="keywords != null">keywords = #{keywords},</if>
+            <if test="selectedCount != null">selected_count = #{selectedCount},</if>
+            <if test="isSelected != null">is_selected = #{isSelected},</if>
+            <if test="nextGenerationId != null">next_generation_id = #{nextGenerationId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusinessDecisionOptionsById" parameterType="Long">
+        delete from business_decision_options where id = #{id}
+    </delete>
+
+    <delete id="deleteBusinessDecisionOptionsByIds" parameterType="String">
+        delete from business_decision_options where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
