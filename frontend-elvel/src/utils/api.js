@@ -3,7 +3,7 @@
 export const authApi = {
     // 用户登录
     async login(username, password) {
-        const response = await fetch('/api/auth/login/password', {
+        const response = await fetch('/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

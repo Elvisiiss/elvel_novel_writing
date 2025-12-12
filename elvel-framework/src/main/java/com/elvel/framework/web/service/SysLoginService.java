@@ -1,6 +1,8 @@
 package com.elvel.framework.web.service;
 
 import javax.annotation.Resource;
+
+import com.elvel.common.core.domain.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,6 +30,8 @@ import com.elvel.framework.security.context.AuthenticationContextHolder;
 import com.elvel.system.service.ISysConfigService;
 import com.elvel.system.service.ISysUserService;
 
+import java.util.Set;
+
 /**
  * 登录校验方法
  *
@@ -51,6 +55,9 @@ public class SysLoginService
     @Autowired
     private ISysConfigService configService;
 
+    @Autowired
+    private SysPermissionService permissionService;
+
     /**
      * 登录验证
      *
@@ -60,10 +67,12 @@ public class SysLoginService
      * @param uuid 唯一标识
      * @return 结果
      */
-    public String login(String username, String password, String code, String uuid)
+    public String login(boolean app, String username, String password, String code, String uuid)
     {
-        // 验证码校验
-        validateCaptcha(username, code, uuid);
+        if(!app){
+            // 验证码校验
+            validateCaptcha(username, code, uuid);
+        }
         // 登录前置校验
         loginPreCheck(username, password);
         // 用户验证
@@ -95,6 +104,14 @@ public class SysLoginService
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
+        if(app){
+            SysUser user = loginUser.getUser();
+            // 角色集合
+            Set<String> roles = permissionService.getRolePermission(user);
+            if(roles.contains("Reader")){
+
+            }
+        }
         // 生成token
         return tokenService.createToken(loginUser);
     }

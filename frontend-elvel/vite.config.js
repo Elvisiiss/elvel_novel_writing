@@ -24,9 +24,9 @@ export default defineConfig({
     proxy: {
       // 匹配所有以 /api 开头的请求路径
       '/api': {
-        target: 'http://127.168.82.63:60000', // 后端API地址
+        target: 'http://127.168.82.63:31160', // 后端API地址
         changeOrigin: true, // 允许跨域
-        rewrite: (path) => path.replace(/^\/api/, '') // 移除请求路径中的 /api 前缀
+        rewrite: (path) => path.replace(/^\/api/, '^\\/app') // 移除请求路径中的 /api 前缀
       }
     }
   }

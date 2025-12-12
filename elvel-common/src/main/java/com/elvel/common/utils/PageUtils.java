@@ -1,9 +1,10 @@
 package com.elvel.common.utils;
 
-import com.github.pagehelper.PageHelper;
 import com.elvel.common.core.page.PageDomain;
 import com.elvel.common.core.page.TableSupport;
+import com.elvel.common.utils.StringUtils;
 import com.elvel.common.utils.sql.SqlUtil;
+import com.github.pagehelper.PageHelper;
 
 /**
  * 分页工具类

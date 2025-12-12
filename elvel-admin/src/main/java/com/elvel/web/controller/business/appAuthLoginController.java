@@ -1,13 +1,5 @@
-package com.elvel.web.controller.system;
+package com.elvel.web.controller.business;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 import com.elvel.common.constant.Constants;
 import com.elvel.common.core.domain.AjaxResult;
 import com.elvel.common.core.domain.entity.SysMenu;
@@ -23,14 +15,23 @@ import com.elvel.framework.web.service.SysPermissionService;
 import com.elvel.framework.web.service.TokenService;
 import com.elvel.system.service.ISysConfigService;
 import com.elvel.system.service.ISysMenuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 登录验证
  *
- * @author ruoyi
+ * @author Elvis
  */
 @RestController
-public class SysLoginController
+public class appAuthLoginController
 {
     @Autowired
     private SysLoginService loginService;
@@ -53,12 +54,12 @@ public class SysLoginController
      * @param loginBody 登录信息
      * @return 结果
      */
-    @PostMapping("/login")
+    @PostMapping("/app/login")
     public AjaxResult login(@RequestBody LoginBody loginBody)
     {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
-        String token = loginService.login(false, loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
+        String token = loginService.login(true, loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);
         return ajax;
@@ -69,7 +70,7 @@ public class SysLoginController
      *
      * @return 用户信息
      */
-    @GetMapping("getInfo")
+    @GetMapping("/app/getInfo")
     public AjaxResult getInfo()
     {
         LoginUser loginUser = SecurityUtils.getLoginUser();
@@ -97,7 +98,7 @@ public class SysLoginController
      *
      * @return 路由信息
      */
-    @GetMapping("getRouters")
+    @GetMapping("/app/getRouters")
     public AjaxResult getRouters()
     {
         Long userId = SecurityUtils.getUserId();
